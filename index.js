@@ -3,29 +3,21 @@ const app = express();
 
 const PORT = 4000;
 
-// function handleListening() {
-//   console.log(`Listening on: http://localhost:${PORT}`);
-// }
-
 const handleListening = () =>
   console.log(`Listening on: http://localhost:${PORT}`);
 
-// function handleHome() {
-//     console.log('Hi from home!!');
-// }
-
-// function handleHome(req, res) {
-//     // console.log(req);
-//     res.send("Hello from home");
-// }
-
 const handleHome = (req, res) => res.send("Hello from my ass");
 
-function handleProfile(req, res) {
-  res.send("You are on my profile");
-}
+const handleProfile = (req, res) => res.send("You are on my profile");
+
+const betweenHome = (req, res, next) => {
+  console.log("Between");
+  next();
+};
 
 app.get("/", handleHome);
+
+app.use(betweenHome);
 
 app.get("/profile", handleProfile);
 
