@@ -1,4 +1,5 @@
 import express from "express";
+
 const app = express();
 
 const PORT = 4000;
@@ -10,14 +11,16 @@ const handleHome = (req, res) => res.send("Hello from my ass");
 
 const handleProfile = (req, res) => res.send("You are on my profile");
 
+// const betweenHome = () => console.log("I'm between");
+
 const betweenHome = (req, res, next) => {
   console.log("Between");
   next();
 };
 
-app.get("/", handleHome);
-
 app.use(betweenHome);
+
+app.get("/", handleHome);
 
 app.get("/profile", handleProfile);
 
