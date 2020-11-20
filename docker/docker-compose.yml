@@ -9,6 +9,12 @@ services:
     volumes:
       - /Users/ahnzi/Workspaces/MongoData:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: "root"
-      MONGO_INITDB_ROOT_PASSWORD: "root"
+      - MONGO_INITDB_ROOT_USERNAME: "root"
+      - MONGO_INITDB_ROOT_PASSWORD: "root"
     container_name: "docker-mongo"
+    networks:
+      - my-network
+
+  networks:
+    my-network:
+      driver: bridge
