@@ -13,6 +13,7 @@ const app = express();
 
 app.use(helmet()); // application 의 안정성을 위한 미들웨어
 app.set("view engine", "pug");
+app.use("/uploads", express.static("uploads/")); // directory 에서 file 을 보내주는 미들웨어
 app.use(cookieParser()); // 사용자 인증 시 필요한 미들웨어
 app.use(bodyParser.json()); // 사용자가 웹사이트로 전달하는 정보들을 검사하는 미들웨어
 app.use(bodyParser.urlencoded({ extended: true }));
