@@ -1,7 +1,8 @@
 import routes from "../routes";
 import Video from "../models/Video";
 
-export const home = async(req, res) => {
+// Home
+export const home = async (req, res) => {
   try {
     const videos = await Video.find({});
     res.render("home", { pageTitle: "Home", videos });
@@ -11,6 +12,7 @@ export const home = async(req, res) => {
   }  
 };
 
+// Search
 export const search = (req, res) => {
   // const searchingBy = req.query.term;
   const {
@@ -19,6 +21,7 @@ export const search = (req, res) => {
   res.render("search", { pageTitle: "Search", searchingBy, videos });
 };
 
+// Video Upload
 export const getUpload = (req, res) =>
   res.render("upload", { pageTitle: "Upload" });
 
@@ -37,20 +40,22 @@ export const postUpload = async(req, res) => {
     res.redirect(routes.videoDetail(newVideo.id));
 };
 
-export const videoDetail = async(req, res) => {
+// Video Detail
+export const videoDetail = async (req, res) => {
   const {
     params: {id}
   } = req;
   try {
     const video = await Video.findById(id);
-    res.render("videoDetail", { pageTitle: "Video Detail", video });
+    res.render("videoDetail", { pageTitle: video.title, video });
   } catch(error) {
     console.log(error);
     res.redirect(routes.home);
   }
 };
 
-export const getEditVideo = async(req, res) => {
+// Video Edit
+export const getEditVideo = async (req, res) => {
   const {
     params: {id}
   } = req;
@@ -64,19 +69,28 @@ export const getEditVideo = async(req, res) => {
   }
 };
 
-export const postEditVideo = async(req, res) => {
+export const postEditVideo = async (req, res) => {
   const {
     params: { id },
     body: { title, description }
   } = req;
   try {
-    await Video.findOneAndUpdate({ id }, { title, description });
+    await Video.findOneAndUpdate({ _id: id }, { title, description });
     res.redirect(routes.videoDetail(id));
   } catch (error) {
     res.redirect(routes.home);
   }
 };
 
-export const deleteVideo = (req, res) =>
-  res.render("deleteVideo", { pageTitle: "Delete Video" });
-  
+// Video Delete
+export const deleteVideo = async (req, res) => {
+  const {
+    params: { id }
+  } = req;
+  try {
+    // 해당하는 비디오를 찾아서 지우기
+    await Video.findOneAndRemove({ _id: id  });
+  } catch (error) {}
+  res.redirect(routes.home);
+};
+
