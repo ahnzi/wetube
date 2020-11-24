@@ -48,10 +48,35 @@ export const videoDetail = async(req, res) => {
     console.log(error);
     res.redirect(routes.home);
   }
-}
+};
 
-export const editVideo = (req, res) =>
-  res.render("editVideo", { pageTitle: "Edit Video" });
+export const getEditVideo = async(req, res) => {
+  const {
+    params: {id}
+  } = req;
+  try {
+    const video = await Video.findById(id);
+    res.render("editVideo", { pageTitle: `Edit ${video.title}`, video });
+  } catch (error) {
+    console.log(error);
+    // 만약 해당하는 비디오를 못찾는다면 존재하지 않는 비디오를 수정해야 한다는 뜻입니다. (X_X)
+    res.redirect(routes.home);
+  }
+};
+
+export const postEditVideo = async(req, res) => {
+  const {
+    params: { id },
+    body: { title, description }
+  } = req;
+  try {
+    await Video.findOneAndUpdate({ id }, { title, description });
+    res.redirect(routes.videoDetail(id));
+  } catch (error) {
+    res.redirect(routes.home);
+  }
+};
 
 export const deleteVideo = (req, res) =>
   res.render("deleteVideo", { pageTitle: "Delete Video" });
+  
