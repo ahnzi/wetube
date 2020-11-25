@@ -119,3 +119,4 @@ dist
 package-lock.json
 uploads
 .eslintrc.js
+.DS_Store
