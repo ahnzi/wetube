@@ -43,7 +43,7 @@ export const githubLogin = passport.authenticate("github");
 
 export const githubLoginCallback = async (_, __, profile, cb) => { // cb 는 passport 로 부터 우리에게 제공되는 것
   const { 
-    _json: { id, avatar_url, name, email } 
+    _json: { id, avatar_url: avatarUrl, name, email } 
   } = profile;
   try {
     const user = await User.findOne({ email });
@@ -56,7 +56,7 @@ export const githubLoginCallback = async (_, __, profile, cb) => { // cb 는 pas
         email,
         name,
         githubId: id,
-        avatarUrl: avatar_url
+        avatarUrl
       });
       return cb(null, newUser);
     }
@@ -74,8 +74,11 @@ export const logout = (req, res) => {
   res.redirect(routes.home);
 };
 
-export const userDetail = (req, res) =>
-  res.render("userDetail", { pageTitle: "User Detail" });
+export const getMe = (req, res) => {
+  res.render("userDetail", { pageTitle: "User Detail", user: req.user }); // req.user : 현재 로그인 된 사용자
+};
+
+export const userDetail = (req, res) => res.render("userDetail", { pageTitle: "User Detail" });
 export const editProfile = (req, res) =>
   res.render("editProfile", { pageTitle: "Edit Profile" });
 export const changePassword = (req, res) =>

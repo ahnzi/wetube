@@ -19,7 +19,7 @@ const app = express();
 
 const CookieStore = MongoStore(session);
 
-app.use(helmet()); // application 의 안정성을 위한 미들웨어
+app.use(helmet({ contentSecurityPolicy: false })); // application 의 안정성을 위한 미들웨어
 app.set("view engine", "pug");
 app.use("/uploads", express.static("uploads")); // directory 에서 file 을 보내주는 미들웨어
 app.use("/static", express.static("static"));
