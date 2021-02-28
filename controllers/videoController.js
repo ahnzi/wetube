@@ -50,13 +50,13 @@ export const postUpload = async (req, res) => {
 };
 
 // Video Detail
+
 export const videoDetail = async (req, res) => {
   const {
     params: { id },
   } = req;
   try {
     const video = await Video.findById(id).populate('creator');
-    console.log(video);
     res.render("videoDetail", { pageTitle: video.title, video });
   } catch (error) {
     console.log(error);
@@ -65,13 +65,18 @@ export const videoDetail = async (req, res) => {
 };
 
 // Video Edit
+
 export const getEditVideo = async (req, res) => {
   const {
     params: { id },
   } = req;
   try {
     const video = await Video.findById(id);
-    res.render("editVideo", { pageTitle: `Edit ${video.title}`, video });
+    if (video.creator !== req.user.id) {
+      throw Error();
+    } else {
+      res.render("editVideo", { pageTitle: `Edit ${video.title}`, video });
+    }
   } catch (error) {
     console.log(error);
     // 만약 해당하는 비디오를 못찾는다면 존재하지 않는 비디오를 수정해야 한다는 뜻입니다. (X_X)
@@ -93,13 +98,19 @@ export const postEditVideo = async (req, res) => {
 };
 
 // Video Delete
+
 export const deleteVideo = async (req, res) => {
   const {
     params: { id },
   } = req;
   try {
-    // 해당하는 비디오를 찾아서 지우기
-    await Video.findOneAndRemove({ _id: id });
+    const video = await Video.findById(id);
+    if (video.creator !== req.user.id) {
+      throw Error();
+    } else {
+      // 해당하는 비디오를 찾아서 지우기
+      await Video.findOneAndRemove({ _id: id });
+    }
   } catch (error) {
     console.log(error);
   }
